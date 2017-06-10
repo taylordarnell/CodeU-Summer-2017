@@ -17,12 +17,7 @@ package codeu.chat.client.core;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import codeu.chat.common.BasicView;
-import codeu.chat.common.ConversationHeader;
-import codeu.chat.common.ConversationPayload;
-import codeu.chat.common.Message;
-import codeu.chat.common.NetworkCode;
-import codeu.chat.common.User;
+import codeu.chat.common.*;
 import codeu.chat.util.Logger;
 import codeu.chat.util.Serializers;
 import codeu.chat.util.Time;
@@ -136,4 +131,25 @@ final class View implements BasicView {
 
     return messages;
   }
+
+  public ServerInfo getInfo() {
+    try (final Connection connection = source.connect()) {
+      Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
+      if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE) {
+        final Time startTime = Time.SERIALIZER.read(connection.in());
+        return new ServerInfo(startTime);
+      } else {
+        // Communicate this error - the server did not respond with the type of
+        // response we expected.
+        LOG.error("The server did not respondd with the type of response we expected.");
+      }
+    } catch (Exception ex) {
+      // Communicate this error - something went wrong with the connection.
+      System.out.println("ERROR: Something went wrong with the connection.");
+      LOG.error(ex, "Exception during call on server.");
+    }
+    // If we get here it means something went wrong and null should be returned
+    return null;
+  }
+
 }
