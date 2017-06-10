@@ -23,6 +23,7 @@ import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
+import codeu.chat.common.ServerInfo;
 
 public final class Chat {
 
@@ -107,6 +108,8 @@ public final class Chat {
         System.out.println("    Add a new user with the given name.");
         System.out.println("  u-sign-in <name>");
         System.out.println("    Sign in as the user with the given name.");
+        System.out.println("  info");
+        System.out.println("    Displays the server info.");
         System.out.println("  exit");
         System.out.println("    Exit the program.");
       }
@@ -180,6 +183,23 @@ public final class Chat {
         return null;
       }
     });
+
+    //Prints server info. If no valid info object is found, an error occurs.
+    panel.register("info", new Panel.Command() {
+      @Override
+      public void invoke(Scanner args) {
+        final ServerInfo info = context.getInfo();
+        if (info == null) {
+          // Communicate error to user - the server did not send us a valid
+          // info object.
+          System.out.println("ERROR: Server did not send a valid info object.");
+        } else {
+          // Print the server info to the user in a pretty way
+          System.out.println(info);
+        }
+      }
+    });
+
 
     // Now that the panel has all its commands registered, return the panel
     // so that it can be used.
