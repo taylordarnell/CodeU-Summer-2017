@@ -61,7 +61,8 @@ public final class Server {
 
   private static final ServerInfo info = new ServerInfo();
 
-  public Server(final Uuid id, final Secret secret, final Relay relay) throws IOException {
+
+  public Server(final Uuid id, final Secret secret, final Relay relay)  {
 
     this.id = id;
     this.secret = secret;
