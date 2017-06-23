@@ -211,10 +211,7 @@ public final class Server {
           final int type = Serializers.INTEGER.read(connection.in());
           final Command command = commands.get(type);
 
-          if (type == NetworkCode.SERVER_INFO_REQUEST) {
-            Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
-            Time.SERIALIZER.write(out, view.getInfo().startTime);
-          } else if (command == null) {
+          if (command == null) {
             // The message type cannot be handled so return a dummy message.
             Serializers.INTEGER.write(connection.out(), NetworkCode.NO_MESSAGE);
             LOG.info("Connection rejected");
