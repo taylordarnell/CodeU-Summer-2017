@@ -141,7 +141,7 @@ final class View implements BasicView {
       } else {
         // Communicate this error - the server did not respond with the type of
         // response we expected.
-        LOG.error("The server did not respondd with the type of response we expected.");
+        LOG.error("The server did not respond with the type of response we expected.");
       }
     } catch (Exception ex) {
       // Communicate this error - something went wrong with the connection.

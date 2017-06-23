@@ -108,6 +108,8 @@ public final class Chat {
         System.out.println("    Add a new user with the given name.");
         System.out.println("  u-sign-in <name>");
         System.out.println("    Sign in as the user with the given name.");
+        System.out.println("  info");
+        System.out.println("    Display server info.");
         System.out.println("  exit");
         System.out.println("    Exit the program.");
       }
@@ -182,14 +184,14 @@ public final class Chat {
       }
     });
 
-    panel.register(“info"", new Panel.Command() {
+    panel.register("info", new Panel.Command() {
       @Override
       public void invoke(Scanner args) {
         final ServerInfo info = context.getInfo();
         if (info == null) {
           // Communicate error to user - the server did not send us a valid
           // info object.
-          System.out.println("ERROR: The server did not send a vald info object.");
+          System.out.println("ERROR: The server did not send a valid info object.");
         } else {
           // Print the server info to the user in a pretty way
           System.out.println(info);

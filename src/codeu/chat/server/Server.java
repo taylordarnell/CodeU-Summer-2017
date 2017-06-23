@@ -130,7 +130,7 @@ public final class Server {
 
     // Get Conversations - A client wants to get all the conversations from the back end.
     this.commands.put(NetworkCode.GET_ALL_CONVERSATIONS_REQUEST, new Command() {
-      @Override
+        @Override
       public void onMessage(InputStream in, OutputStream out) throws IOException {
 
         final Collection<ConversationHeader> conversations = view.getConversations();
@@ -166,6 +166,14 @@ public final class Server {
 
         Serializers.INTEGER.write(out, NetworkCode.GET_MESSAGES_BY_ID_RESPONSE);
         Serializers.collection(Message.SERIALIZER).write(out, messages);
+      }
+    });
+
+    this.commands.put(NetworkCode.SERVER_INFO_REQUEST, new Command() {
+      @Override
+      public void onMessage(InputStream in, OutputStream out) throws IOException {
+        Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
+        Time.SERIALIZER.write(out, view.getInfo().startTime);
       }
     });
 
@@ -205,7 +213,7 @@ public final class Server {
 
           if (type == NetworkCode.SERVER_INFO_REQUEST) {
             Serializers.INTEGER.write(out, NetworkCode.SERVER_INFO_RESPONSE);
-            Uuid.SERIALIZER.write(out, info.version);
+            Time.SERIALIZER.write(out, view.getInfo().startTime);
           } else if (command == null) {
             // The message type cannot be handled so return a dummy message.
             Serializers.INTEGER.write(connection.out(), NetworkCode.NO_MESSAGE);
