@@ -102,7 +102,7 @@ public final class Chat {
     //
     panel.register("help", new Panel.Command() {
       @Override
-      public void invoke(Scanner args) {
+      public void invoke(List<String> args) {
         System.out.println("ROOT MODE");
         System.out.println("  u-list");
         System.out.println("    List all users.");
@@ -122,7 +122,7 @@ public final class Chat {
     //
     panel.register("u-list", new Panel.Command() {
       @Override
-      public void invoke(Scanner args) {
+      public void invoke(List<String> args) {
         for (final UserContext user : context.allUsers()) {
           System.out.format(
               "USER %s (UUID:%s)\n",
@@ -139,8 +139,9 @@ public final class Chat {
     //
     panel.register("u-add", new Panel.Command() {
       @Override
-      public void invoke(Scanner args) {
-        final String name = args.hasNext() ? args.nextLine().trim() : "";
+      public void invoke(List<String> args) {
+        //final String name = args.hasNext() ? args.nextLine().trim() : "";
+        final String name = args.get(0);
         if (name.length() > 0) {
           if (context.create(name) == null) {
             System.out.println("ERROR: Failed to create new user");
@@ -148,6 +149,7 @@ public final class Chat {
         } else {
           System.out.println("ERROR: Missing <username>");
         }
+        args.remove(0);
       }
     });
 
@@ -158,8 +160,9 @@ public final class Chat {
     //
     panel.register("u-sign-in", new Panel.Command() {
       @Override
-      public void invoke(Scanner args) {
-        final String name = args.hasNext() ? args.nextLine().trim() : "";
+      public void invoke(List<String> args) {
+        //final String name = args.hasNext() ? args.nextLine().trim() : "";
+        final String name = args.get(0);
         if (name.length() > 0) {
           final UserContext user = findUser(name);
           if (user == null) {
@@ -170,6 +173,7 @@ public final class Chat {
         } else {
           System.out.println("ERROR: Missing <username>");
         }
+        args.remove(0);
       }
 
       // Find the first user with the given name and return a user context
@@ -200,7 +204,7 @@ public final class Chat {
     //
     panel.register("help", new Panel.Command() {
       @Override
-      public void invoke(Scanner args) {
+      public void invoke(List<String> args) {
         System.out.println("USER MODE");
         System.out.println("  c-list");
         System.out.println("    List all conversations that the current user can interact with.");
@@ -224,7 +228,7 @@ public final class Chat {
     //
     panel.register("c-list", new Panel.Command() {
       @Override
-      public void invoke(Scanner args) {
+      public void invoke(List<String> args) {
         for (final ConversationContext conversation : user.conversations()) {
           System.out.format(
               "CONVERSATION %s (UUID:%s)\n",
@@ -241,8 +245,9 @@ public final class Chat {
     //
     panel.register("c-add", new Panel.Command() {
       @Override
-      public void invoke(Scanner args) {
-        final String name = args.hasNext() ? args.nextLine().trim() : "";
+      public void invoke(List<String> args) {
+        //final String name = args.hasNext() ? args.nextLine().trim() : "";
+        final String name = args.get(0);
         if (name.length() > 0) {
           final ConversationContext conversation = user.start(name);
           if (conversation == null) {
@@ -253,6 +258,7 @@ public final class Chat {
         } else {
           System.out.println("ERROR: Missing <title>");
         }
+        args.remove(0);
       }
     });
 
@@ -263,8 +269,9 @@ public final class Chat {
     //
     panel.register("c-join", new Panel.Command() {
       @Override
-      public void invoke(Scanner args) {
-        final String name = args.hasNext() ? args.nextLine().trim() : "";
+      public void invoke(List<String> args) {
+        //final String name = args.hasNext() ? args.nextLine().trim() : "";
+        final String name = args.get(0);
         if (name.length() > 0) {
           final ConversationContext conversation = find(name);
           if (conversation == null) {
@@ -275,6 +282,7 @@ public final class Chat {
         } else {
           System.out.println("ERROR: Missing <title>");
         }
+        args.remove(0);
       }
 
       // Find the first conversation with the given name and return its context.
@@ -296,7 +304,7 @@ public final class Chat {
     //
     panel.register("info", new Panel.Command() {
       @Override
-      public void invoke(Scanner args) {
+      public void invoke(List<String> args) {
         System.out.println("User Info:");
         System.out.format("  Name : %s\n", user.user.name);
         System.out.format("  Id   : UUID:%s\n", user.user.id);
@@ -319,7 +327,7 @@ public final class Chat {
     //
     panel.register("help", new Panel.Command() {
       @Override
-      public void invoke(Scanner args) {
+      public void invoke(List<String> args) {
         System.out.println("USER MODE");
         System.out.println("  m-list");
         System.out.println("    List all messages in the current conversation.");
@@ -341,7 +349,7 @@ public final class Chat {
     //
     panel.register("m-list", new Panel.Command() {
       @Override
-      public void invoke(Scanner args) {
+      public void invoke(List<String> args) {
         System.out.println("--- start of conversation ---");
         for (MessageContext message = conversation.firstMessage();
                             message != null;
@@ -364,13 +372,15 @@ public final class Chat {
     //
     panel.register("m-add", new Panel.Command() {
       @Override
-      public void invoke(Scanner args) {
-        final String message = args.hasNext() ? args.nextLine().trim() : "";
+      public void invoke(List<String> args) {
+        //final String message = args.hasNext() ? args.nextLine().trim() : "";
+        final String message = args.get(0);
         if (message.length() > 0) {
           conversation.add(message);
         } else {
           System.out.println("ERROR: Messages must contain text");
         }
+        args.remove(0);
       }
     });
 
@@ -381,7 +391,7 @@ public final class Chat {
     //
     panel.register("info", new Panel.Command() {
       @Override
-      public void invoke(Scanner args) {
+      public void invoke(List<String> args) {
         System.out.println("Conversation Info:");
         System.out.format("  Title : %s\n", conversation.conversation.title);
         System.out.format("  Id    : UUID:%s\n", conversation.conversation.id);
