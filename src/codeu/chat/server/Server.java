@@ -15,6 +15,7 @@
 
 package codeu.chat.server;
 
+import java.io.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -66,6 +67,12 @@ public final class Server {
 
   public Server(final Uuid id, final Secret secret, final Relay relay) {
 
+    try {
+      Logger.enableFileOutput("transactionLog.txt");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
     this.id = id;
     this.secret = secret;
     this.controller = new Controller(id, model);
@@ -89,6 +96,8 @@ public final class Server {
             author,
             conversation,
             message.id));
+
+        LOG.info("ADD-MESSAGE", message);
       }
     });
 
@@ -102,6 +111,8 @@ public final class Server {
 
         Serializers.INTEGER.write(out, NetworkCode.NEW_USER_RESPONSE);
         Serializers.nullable(User.SERIALIZER).write(out, user);
+
+        LOG.info("ADD-USER", user);
       }
     });
 
@@ -116,6 +127,8 @@ public final class Server {
 
         Serializers.INTEGER.write(out, NetworkCode.NEW_CONVERSATION_RESPONSE);
         Serializers.nullable(ConversationHeader.SERIALIZER).write(out, conversation);
+
+        LOG.info("ADD-CONVERSATION", conversation);
       }
     });
 

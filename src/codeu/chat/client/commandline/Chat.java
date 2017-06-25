@@ -18,11 +18,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Stack;
+import java.io.*;
 
 import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
+import codeu.chat.util.Logger;
+
 
 public final class Chat {
 
@@ -35,9 +38,11 @@ public final class Chat {
   // panel all it needs to do is pop the top panel.
   private final Stack<Panel> panels = new Stack<>();
 
+
   public Chat(Context context) {
     this.panels.push(createRootPanel(context));
   }
+
 
   // HANDLE COMMAND
   //
@@ -89,6 +94,20 @@ public final class Chat {
   // will be user selection focused.
   //
   private Panel createRootPanel(final Context context) {
+
+    if(new File("transactionLog").length() > 0) {
+      Scanner file = null;
+      try {
+        file = new Scanner(new File("transactionLog"));
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      for(String line = file.nextLine(); file.hasNextLine(); line = file.nextLine()) {
+        if(line.contains("ADD-USER")) {
+          handleCommand("U-ADD");
+        }
+      }
+    }
 
     final Panel panel = new Panel();
 
@@ -189,6 +208,20 @@ public final class Chat {
   private Panel createUserPanel(final UserContext user) {
 
     final Panel panel = new Panel();
+
+    if(new File("transactionLog").length() > 0) {
+      Scanner file = null;
+      try {
+        file = new Scanner(new File("transactionLog"));
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      for(String line = file.nextLine(); file.hasNextLine(); line = file.nextLine()) {
+        if(line.contains("ADD-CONVERSATION")) {
+          handleCommand("c-add");
+        }
+      }
+    }
 
     // HELP
     //
@@ -308,6 +341,20 @@ public final class Chat {
   private Panel createConversationPanel(final ConversationContext conversation) {
 
     final Panel panel = new Panel();
+
+    if(new File("transactionLog").length() > 0) {
+      Scanner file = null;
+      try {
+        file = new Scanner(new File("transactionLog"));
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      for(String line = file.nextLine(); file.hasNextLine(); line = file.nextLine()) {
+        if(line.contains("ADD-MESSAGE")) {
+          handleCommand("m-add");
+        }
+      }
+    }
 
     // HELP
     //

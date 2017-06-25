@@ -44,7 +44,7 @@ final class Panel {
   // HANDLE COMMAND
   //
   // Given a command name and the rest of the line (from the command line) call
-  // the correct command. If no command is found for the givem command name, false
+  // the correct command. If no command is found for the given command name, false
   // will be returned. True will be return if a command is found. Whether or not
   // the command was successful is not returned.
   //
