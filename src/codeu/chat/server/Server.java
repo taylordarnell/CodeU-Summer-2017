@@ -59,8 +59,6 @@ public final class Server {
   private final Relay relay;
   private Uuid lastSeen = Uuid.NULL;
 
-  private static final ServerInfo info = new ServerInfo();
-
 
   public Server(final Uuid id, final Secret secret, final Relay relay)  {
 

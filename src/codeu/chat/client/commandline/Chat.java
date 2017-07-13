@@ -108,7 +108,7 @@ public final class Chat {
         System.out.println("    Add a new user with the given name.");
         System.out.println("  u-sign-in <name>");
         System.out.println("    Sign in as the user with the given name.");
-        System.out.println("  info");
+        System.out.println("  s-info");
         System.out.println("    Displays the server info.");
         System.out.println("  exit");
         System.out.println("    Exit the program.");
@@ -184,8 +184,8 @@ public final class Chat {
       }
     });
 
-    //Prints server info. If no valid info object is found, an error occurs.
-    panel.register("info", new Panel.Command() {
+    // Prints server info. If no valid info object is found, an error occurs.
+    panel.register("s-info", new Panel.Command() {
       @Override
       public void invoke(Scanner args) {
         final ServerInfo info = context.getInfo();

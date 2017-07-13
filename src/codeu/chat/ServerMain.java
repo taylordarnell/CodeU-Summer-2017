@@ -96,8 +96,7 @@ final class ServerMain {
                         new RemoteRelay(relaySource);
 
     final Server server = new Server(id, secret, relay);
-
-
+    
     LOG.info("Created server.");
 
     while (true) {
