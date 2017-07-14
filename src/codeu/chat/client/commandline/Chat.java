@@ -108,7 +108,7 @@ public final class Chat {
         System.out.println("    Add a new user with the given name.");
         System.out.println("  u-sign-in <name>");
         System.out.println("    Sign in as the user with the given name.");
-        System.out.println("  info");
+        System.out.println("  s-info");
         System.out.println("    Display server info.");
         System.out.println("  exit");
         System.out.println("    Exit the program.");
@@ -184,7 +184,7 @@ public final class Chat {
       }
     });
 
-    panel.register("info", new Panel.Command() {
+    panel.register("s-info", new Panel.Command() {
       @Override
       public void invoke(Scanner args) {
         final ServerInfo info = context.getInfo();
@@ -198,7 +198,6 @@ public final class Chat {
         }
       }
     });
-
 
     // Now that the panel has all its commands registered, return the panel
     // so that it can be used.
