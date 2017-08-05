@@ -3,12 +3,12 @@ package codeu.chat.util;
 import java.io.IOException;
 
 public final class Tokenizer {
-    private StringBuilder token;
+    private StringBuilder token = new StringBuilder();
     private String source;
     private int at;
 
     public Tokenizer(String source) {
-
+        this.source = source;
     }
     public String next() throws IOException {
         // Skip all leading whitespace
