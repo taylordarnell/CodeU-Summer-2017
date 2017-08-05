@@ -2,12 +2,12 @@ package codeu.chat.common;
 
 import codeu.chat.util.Time;
 
-public class ServerInfo {
+public class UpTimeInfo {
     public final Time startTime;
-    public ServerInfo() {
+    public UpTimeInfo() {
         this.startTime = Time.now();
     }
-    public ServerInfo(Time startTime) {
+    public UpTimeInfo(Time startTime) {
         this.startTime = startTime;
     }
 }

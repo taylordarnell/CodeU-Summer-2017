@@ -23,7 +23,7 @@ import codeu.chat.client.core.Context;
 import codeu.chat.client.core.ConversationContext;
 import codeu.chat.client.core.MessageContext;
 import codeu.chat.client.core.UserContext;
-import codeu.chat.common.ServerInfo;
+import codeu.chat.common.UpTimeInfo;
 
 public final class Chat {
 
@@ -108,7 +108,7 @@ public final class Chat {
         System.out.println("    Add a new user with the given name.");
         System.out.println("  u-sign-in <name>");
         System.out.println("    Sign in as the user with the given name.");
-        System.out.println("  s-info");
+        System.out.println("  uptime-info");
         System.out.println("    Display server info.");
         System.out.println("  exit");
         System.out.println("    Exit the program.");
@@ -184,10 +184,10 @@ public final class Chat {
       }
     });
 
-    panel.register("s-info", new Panel.Command() {
+    panel.register("uptime-info", new Panel.Command() {
       @Override
       public void invoke(Scanner args) {
-        final ServerInfo info = context.getInfo();
+        final UpTimeInfo info = context.getInfo();
         if (info == null) {
           // Communicate error to user - the server did not send us a valid
           // info object.

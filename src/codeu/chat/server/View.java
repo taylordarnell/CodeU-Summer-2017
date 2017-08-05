@@ -109,10 +109,10 @@ public final class View implements BasicView, SinglesView {
     return found;
   }
 
-  private static final ServerInfo info = new ServerInfo();
+  private static final UpTimeInfo info = new UpTimeInfo();
 
   @Override
-  public ServerInfo getInfo() {
+  public UpTimeInfo getInfo() {
     return info;
   }
 

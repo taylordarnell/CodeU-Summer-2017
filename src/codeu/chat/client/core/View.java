@@ -132,12 +132,12 @@ final class View implements BasicView {
     return messages;
   }
 
-  public ServerInfo getInfo() {
+  public UpTimeInfo getInfo() {
     try (final Connection connection = source.connect()) {
       Serializers.INTEGER.write(connection.out(), NetworkCode.SERVER_INFO_REQUEST);
       if (Serializers.INTEGER.read(connection.in()) == NetworkCode.SERVER_INFO_RESPONSE) {
         final Time startTime = Time.SERIALIZER.read(connection.in());
-        return new ServerInfo(startTime);
+        return new UpTimeInfo(startTime);
       } else {
         // Communicate this error - the server did not respond with the type of
         // response we expected.
