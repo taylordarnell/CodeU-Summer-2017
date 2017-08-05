@@ -15,15 +15,13 @@
 
 package codeu.chat.server;
 
+import java.io.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import codeu.chat.common.ConversationHeader;
 import codeu.chat.common.ConversationPayload;
@@ -39,6 +37,8 @@ import codeu.chat.util.Time;
 import codeu.chat.util.Timeline;
 import codeu.chat.util.Uuid;
 import codeu.chat.util.connections.Connection;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 public final class Server {
 
@@ -57,19 +57,53 @@ public final class Server {
   private final Uuid id;
   private final Secret secret;
 
-  private final Model model = new Model();
+  private Model model = new Model();
   private final View view = new View(model);
-  private final Controller controller;
+  private Controller controller;
 
-  private final Relay relay;
+  private Relay relay;
   private Uuid lastSeen = Uuid.NULL;
 
   public Server(final Uuid id, final Secret secret, final Relay relay) {
 
+    File file = new File("transactionLog.txt");
+
     this.id = id;
     this.secret = secret;
-    this.controller = new Controller(id, model);
-    this.relay = relay;
+
+    String fileAsString = "";
+    try {
+      InputStream is = new FileInputStream("transactionLog.txt");
+      BufferedReader buf = new BufferedReader(new InputStreamReader(is));
+      String line = buf.readLine();
+      StringBuilder sb = new StringBuilder();
+      while (line != null) {
+        sb.append(line).append("\n");
+        line = buf.readLine();
+      }
+      fileAsString = sb.toString();
+      System.out.println("READING FILE: " + fileAsString);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    //Scanner input = new Scanner(file);
+    //String savedState = null;
+    //while(input.hasNextLine()) {
+//      savedState += input.nextLine();
+//    }
+
+    try {
+      Gson gson = new Gson();
+      model = gson.fromJson(fileAsString, Model.class);
+      this.controller = new Controller(this.id, model);
+      this.relay = relay;
+    } catch (IllegalStateException | JsonSyntaxException e) {
+      e.printStackTrace();
+    }
+
+    //File file = new File("log.txt");
+    //file.createNewFile();
 
     // New Message - A client wants to add a new message to the back end.
     this.commands.put(NetworkCode.NEW_MESSAGE_REQUEST, new Command() {
@@ -81,6 +115,11 @@ public final class Server {
         final String content = Serializers.STRING.read(in);
 
         final Message message = controller.newMessage(author, conversation, content);
+
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(model));
+        FileWriter writer = new FileWriter(file);
+        writer.write(gson.toJson(model));
 
         Serializers.INTEGER.write(out, NetworkCode.NEW_MESSAGE_RESPONSE);
         Serializers.nullable(Message.SERIALIZER).write(out, message);
@@ -100,6 +139,13 @@ public final class Server {
         final String name = Serializers.STRING.read(in);
         final User user = controller.newUser(name);
 
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(model));
+        FileWriter writer = new FileWriter(file);
+        writer.write(gson.toJson(model));
+        writer.flush();
+        writer.close();
+
         Serializers.INTEGER.write(out, NetworkCode.NEW_USER_RESPONSE);
         Serializers.nullable(User.SERIALIZER).write(out, user);
       }
@@ -113,6 +159,11 @@ public final class Server {
         final String title = Serializers.STRING.read(in);
         final Uuid owner = Uuid.SERIALIZER.read(in);
         final ConversationHeader conversation = controller.newConversation(title, owner);
+
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(model));
+        FileWriter writer = new FileWriter(file);
+        writer.write(gson.toJson(model));
 
         Serializers.INTEGER.write(out, NetworkCode.NEW_CONVERSATION_RESPONSE);
         Serializers.nullable(ConversationHeader.SERIALIZER).write(out, conversation);
